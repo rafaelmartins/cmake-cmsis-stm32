@@ -207,7 +207,10 @@ function(cmsis_stm32_target target)
     endif()
 
     if(generate_dfu)
-        find_program(DFUSE_PACK dfuse-pack REQUIRED)
+        find_program(DFUSE_PACK
+            NAMES dfuse-pack.py dfuse-pack
+            REQUIRED
+        )
 
         add_custom_command(
             OUTPUT ${target}.dfu
