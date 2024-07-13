@@ -149,7 +149,7 @@ function(cmsis_stm32_target target)
     )
 
     if(target_arg_INSTALL)
-        install(FILES "$<TARGET_FILE:${target}>" TYPE BIN)
+        install(TARGETS ${target})
     endif()
 
     if(generate_map)
@@ -161,7 +161,10 @@ function(cmsis_stm32_target target)
             PROPERTY ADDITIONAL_CLEAN_FILES "$<TARGET_FILE:${target}>.map"
         )
         if(target_arg_INSTALL)
-            install(FILES "$<TARGET_FILE:${target}>.map" TYPE BIN)
+            install(FILES
+                "$<TARGET_FILE:${target}>.map"
+                TYPE BIN
+            )
         endif()
     endif()
 
@@ -182,7 +185,10 @@ function(cmsis_stm32_target target)
         )
 
         if(target_arg_INSTALL)
-            install(FILES "${CMAKE_CURRENT_BINARY_DIR}/${target}.bin" TYPE BIN)
+            install(PROGRAMS
+                "${CMAKE_CURRENT_BINARY_DIR}/${target}.bin"
+                TYPE BIN
+            )
         endif()
     endif()
 
@@ -202,7 +208,10 @@ function(cmsis_stm32_target target)
         )
 
         if(target_arg_INSTALL)
-            install(FILES "${CMAKE_CURRENT_BINARY_DIR}/${target}.hex" TYPE BIN)
+            install(FILES
+                "${CMAKE_CURRENT_BINARY_DIR}/${target}.hex"
+                TYPE BIN
+            )
         endif()
     endif()
 
@@ -227,7 +236,10 @@ function(cmsis_stm32_target target)
         )
 
         if(target_arg_INSTALL)
-            install(FILES "${CMAKE_CURRENT_BINARY_DIR}/${target}.dfu" TYPE BIN)
+            install(FILES
+                "${CMAKE_CURRENT_BINARY_DIR}/${target}.dfu"
+                TYPE BIN
+            )
         endif()
     endif()
 
