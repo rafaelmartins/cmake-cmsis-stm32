@@ -67,6 +67,8 @@ function(cmsis_stm32_target target)
             set(generate_dfu ON)
         elseif(out STREQUAL "MAP")
             set(generate_map ON)
+        elseif(out STREQUAL "S19")
+            set(generate_s19 ON)
         else()
             message(FATAL_ERROR "Invalid ADDITIONAL_OUTPUT: ${out}")
         endif()
@@ -192,7 +194,7 @@ function(cmsis_stm32_target target)
         endif()
     endif()
 
-    if(generate_ihex OR generate_dfu)
+    if(generate_ihex)
         add_custom_command(
             OUTPUT ${target}.hex
             COMMAND
@@ -215,6 +217,29 @@ function(cmsis_stm32_target target)
         endif()
     endif()
 
+    if(generate_s19 OR generate_dfu)
+        add_custom_command(
+            OUTPUT ${target}.s19
+            COMMAND
+                "${CMAKE_OBJCOPY}"
+                    -O srec "$<TARGET_FILE:${target}>"
+                    "${target}.s19"
+            DEPENDS "$<TARGET_FILE:${target}>"
+        )
+
+        add_custom_target(${target}-s19
+            ALL
+            DEPENDS ${target}.s19
+        )
+
+        if(generate_s19 AND target_arg_INSTALL)
+            install(PROGRAMS
+                "${CMAKE_CURRENT_BINARY_DIR}/${target}.s19"
+                TYPE BIN
+            )
+        endif()
+    endif()
+
     if(generate_dfu)
         find_program(DFUSE_PACK
             NAMES dfuse-pack.py dfuse-pack
@@ -225,9 +250,9 @@ function(cmsis_stm32_target target)
             OUTPUT ${target}.dfu
             COMMAND
                 "${DFUSE_PACK}"
-                    -i "${target}.hex"
+                    -s "${target}.s19"
                     "${target}.dfu"
-            DEPENDS ${target}.hex
+            DEPENDS ${target}.s19
         )
 
         add_custom_target(${target}-dfu
