@@ -5,6 +5,12 @@ cmake_minimum_required(VERSION 3.25)
 
 include(FetchContent)
 
+FetchContent_Declare(dfuse-pack
+    URL https://github.com/rafaelmartins/dfu-util/raw/f031ba9f7fea0f5c1ad688524cb605659461930b/dfuse-pack.py
+    URL_HASH MD5=2c7cac4e82d0140c814aea9e324961e5
+    DOWNLOAD_NO_EXTRACT ON
+)
+
 if(NOT DEFINED CMAKE_TOOLCHAIN_FILE AND NOT DEFINED ENV{CMAKE_TOOLCHAIN_FILE})
     set(CMAKE_TOOLCHAIN_FILE "${CMAKE_CURRENT_LIST_DIR}/toolchains/gcc-arm-none-eabi.cmake")
 endif()
@@ -243,13 +249,19 @@ function(cmsis_stm32_target target)
     if(generate_dfu)
         find_program(DFUSE_PACK
             NAMES dfuse-pack.py dfuse-pack
-            REQUIRED
         )
+        if(DFUSE_PACK)
+            set(DFUSE_PACK_CMD ${DFUSE_PACK})
+        else()
+            find_package(Python3 COMPONENTS Interpreter REQUIRED)
+            FetchContent_MakeAvailable(dfuse-pack)
+            set(DFUSE_PACK_CMD ${Python3_EXECUTABLE} ${dfuse-pack_SOURCE_DIR}/dfuse-pack.py)
+        endif()
 
         add_custom_command(
             OUTPUT ${target}.dfu
             COMMAND
-                "${DFUSE_PACK}"
+                ${DFUSE_PACK_CMD}
                     -s "${target}.s19"
                     "${target}.dfu"
             DEPENDS ${target}.s19
