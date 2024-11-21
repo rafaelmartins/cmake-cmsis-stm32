@@ -200,7 +200,7 @@ function(cmsis_stm32_target target)
         endif()
     endif()
 
-    if(generate_ihex)
+    if(generate_ihex OR target_arg_STLINK)
         add_custom_command(
             OUTPUT ${target}.hex
             COMMAND
