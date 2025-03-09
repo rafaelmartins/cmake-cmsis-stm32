@@ -15,7 +15,7 @@ FetchContent_Declare(cmake_cmsis_stm32
 FetchContent_MakeAvailable(cmake_cmsis_stm32)
 ```
 
-It is recommended to add a `GIT_TAG` parameter to `FetchContent_Declare()` pinning your project to a specific git commit in this repository.
+Consider adding a `GIT_TAG` parameter to `FetchContent_Declare()` to pin your project to a specific commit in this repository.
 
 Assuming that there's a `main` target defined in your `CMakeLists.txt` file, add the following snipped to create the `cmsis-stm32`-specific targets:
 
@@ -31,13 +31,13 @@ cmsis_stm32_target(main
 )
 ```
 
-The `DEVICE` parameter should contain the device definition for the microcontroller being used, as expected by the device headers.
+The `DEVICE` parameter should contain the device definition for the microcontroller being used, as expected by the device's headers.
 
 The `VERSION` parameter should point to a [`cmsis-stm32` release](https://github.com/rafaelmartins/cmsis-stm32/releases).
 
-The `LINKER_SCRIPT` must exist is not handled automatically by this project, it must be provided by the user. As we use the default startup scripts from `ST`, it is recommended to use linker scripts created by `STM32CubeMX`, because they define the variables expected by the startup scripts.
+The `LINKER_SCRIPT` must exist is not handled automatically by this project; it must be provided by the user. As we use the default startup scripts from `ST`, it is recommended to use linker scripts created by `STM32CubeMX` because they define the variables expected by the startup scripts.
 
-The `ADDITIONAL_OUTPUTS` parameters contains a space-separated list of formats to be generated, other than an `ELF` binary.
+The `ADDITIONAL_OUTPUTS` parameters contain a space-separated list of formats to be generated, other than a `ELF` binary.
 
 The `SHOW_SIZE` parameter enables showing the size of the binary after building them.
 
