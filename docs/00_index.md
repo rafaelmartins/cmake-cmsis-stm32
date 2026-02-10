@@ -5,7 +5,7 @@ A CMake module for STM32 bare-metal firmware projects. It handles CMSIS integrat
 
 ## What it does
 
-Including `cmake-cmsis-stm32` via `FetchContent` and calling `cmsis_stm32_target()` on your executable target is all it takes. The module downloads the correct CMSIS device headers and startup code from [cmsis-stm32](https://rafaelmartins.com/p/cmsis-stm32/) releases, sets the appropriate CPU and FPU compiler flags for your device, links the startup and system initialization code, and applies your linker script -- no manual setup required. A default ARM GCC toolchain (`arm-none-eabi`) file is provided if none is specified.
+Including `cmake-cmsis-stm32` via `FetchContent` and calling `cmsis_stm32_target()` on your executable target is all it takes. The module downloads the correct CMSIS device headers and startup code from [cmsis-stm32](@@/p/cmsis-stm32/) releases, sets the appropriate CPU and FPU compiler flags for your device, links the startup and system initialization code, and applies your linker script -- no manual setup required. A default ARM GCC toolchain (`arm-none-eabi`) file is provided if none is specified.
 
 ## Key highlights
 
@@ -55,5 +55,5 @@ See the [firmware development guide](80_firmware-development.md) for a complete 
 ## Links
 
 - [Firmware development guide](80_firmware-development.md)
-- [cmsis-stm32 project page](https://rafaelmartins.com/p/cmsis-stm32/)
+- [cmsis-stm32 project page](@@/p/cmsis-stm32/)
 - [GitHub repository](https://github.com/rafaelmartins/cmake-cmsis-stm32/)

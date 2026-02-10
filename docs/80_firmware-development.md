@@ -57,7 +57,7 @@ cmsis_stm32_target(firmware
 
 The `DEVICE` parameter must match identifiers used by ST's CMSIS device headers. These follow the pattern `STM32<family><variant>` -- for example, `STM32F042x6`, `STM32G431xx`, or `STM32L476xx`.
 
-Consult the [cmsis-stm32 project page](https://rafaelmartins.com/p/cmsis-stm32/) for the list of supported device families and their identifiers.
+Consult the [cmsis-stm32 project page](@@/p/cmsis-stm32/) for the list of supported device families and their identifiers.
 
 The device identifier determines:
 
