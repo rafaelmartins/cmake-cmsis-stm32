@@ -5,9 +5,9 @@ menu: Main
 
 ## Overview
 
-Including `cmake-cmsis-stm32` via `FetchContent` and calling `cmsis_stm32_target()` on your executable target is all it takes. The module downloads the correct CMSIS device headers and startup code from [cmsis-stm32](@@/p/cmsis-stm32/) releases, sets the appropriate CPU and FPU compiler flags for your device, links the startup and system initialization code, and applies your linker script -- no manual setup required. A default ARM GCC toolchain (`arm-none-eabi`) file is provided if none is specified.
+Including `cmake-cmsis-stm32` via `FetchContent` and calling `cmsis_stm32_target()` on an executable target is all it takes. The module downloads the correct CMSIS device headers and startup code from [cmsis-stm32](@@/p/cmsis-stm32/) releases, sets the appropriate CPU and FPU compiler flags for the device, links the startup and system initialization code, and applies the provided linker script -- no manual setup required. A default ARM GCC toolchain (`arm-none-eabi`) file is provided if none is specified.
 
-## Key Highlights
+## Key highlights
 
 - **Single-function API** -- one call to `cmsis_stm32_target()` configures everything for a given target
 - **Automatic CMSIS integration** -- device headers and startup code are resolved and downloaded per device identifier
@@ -44,7 +44,7 @@ cmsis_stm32_target(my-firmware
 )
 ```
 
-See the [firmware development guide](80_firmware-development.md) for a complete walkthrough of all parameters and usage patterns.
+See the [firmware development guide](10_firmware-development.md) for a complete walkthrough of all parameters and usage patterns.
 
 ## Requirements
 
@@ -52,8 +52,8 @@ See the [firmware development guide](80_firmware-development.md) for a complete 
 - [ARM GNU Toolchain (`arm-none-eabi`)](https://developer.arm.com/downloads/-/arm-gnu-toolchain-downloads)
 - Project must enable `C` and `ASM` languages
 
-## Explore Further
+## Explore further
 
-- [Firmware development guide](80_firmware-development.md) -- complete walkthrough of all parameters and usage patterns
+- [Firmware development guide](10_firmware-development.md) -- complete walkthrough of all parameters and usage patterns
 - [cmsis-stm32 project page](@@/p/cmsis-stm32/) -- CMSIS device headers and startup code packages
 - [GitHub repository](https://github.com/rafaelmartins/cmake-cmsis-stm32/) -- full source code

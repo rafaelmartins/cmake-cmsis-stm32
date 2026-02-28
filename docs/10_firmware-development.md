@@ -1,11 +1,11 @@
-# Firmware Development
+# Firmware development
 
-This guide covers firmware development with cmake-cmsis-stm32 -- from project setup to flashing your device.
+This guide covers firmware development with cmake-cmsis-stm32 -- from project setup to device flashing.
 
 
 ## Integrating cmake-cmsis-stm32
 
-Add the module to your project via CMake's `FetchContent`. The `FetchContent_Declare` and `FetchContent_MakeAvailable` calls **must appear before** `project()` because the module sets the default toolchain file when no toolchain is specified.
+Add the module to a project via CMake's `FetchContent`. The `FetchContent_Declare` and `FetchContent_MakeAvailable` calls **must appear before** `project()` because the module sets the default toolchain file when no toolchain is specified.
 
 ```cmake
 cmake_minimum_required(VERSION 3.25)
@@ -20,12 +20,12 @@ FetchContent_MakeAvailable(cmake_cmsis_stm32)
 project(my-firmware C ASM)
 ```
 
-Pin to a specific commit by replacing `main` with a commit SHA in the `GIT_TAG` parameter. This prevents unexpected changes from breaking your build.
+Pin to a specific commit by replacing `main` with a commit SHA in the `GIT_TAG` parameter. This prevents unexpected changes from breaking the build.
 
 The module checks `CMAKE_TOOLCHAIN_FILE` and the `CMAKE_TOOLCHAIN_FILE` environment variable. If neither is set, the bundled toolchain file is used automatically.
 
 
-## Defining a Firmware Target
+## Defining a firmware target
 
 Create an executable target with `add_executable`, then configure it with `cmsis_stm32_target()`:
 
@@ -41,10 +41,10 @@ cmsis_stm32_target(firmware
 )
 ```
 
-`cmsis_stm32_target()` must be called after `add_executable`. The function links CMSIS startup code and headers to your target, applies the linker script, and configures CPU-specific compiler flags.
+`cmsis_stm32_target()` must be called after `add_executable`. The function links CMSIS startup code and headers to the target, applies the linker script, and configures CPU-specific compiler flags.
 
 
-### Required Parameters
+### Required parameters
 
 | Parameter | Description |
 |-----------|-------------|
@@ -53,7 +53,7 @@ cmsis_stm32_target(firmware
 | `LINKER_SCRIPT` | Path to a linker script compatible with ST CMSIS startup code |
 
 
-## Selecting a Device
+## Selecting a device
 
 The `DEVICE` parameter must match identifiers used by ST's CMSIS device headers. These follow the pattern `STM32<family><variant>` -- for example, `STM32F042x6`, `STM32G431xx`, or `STM32L476xx`.
 
@@ -67,7 +67,7 @@ The device identifier determines:
 - Preprocessor definitions (e.g., `STM32F042x6=1`, `STM32F0xx=1`)
 
 
-## Specifying a cmsis-stm32 Version
+## Specifying a cmsis-stm32 version
 
 The `VERSION` parameter accepts either `LATEST` or a specific release tag.
 
@@ -87,12 +87,12 @@ cmsis_stm32_target(firmware
 
 Find available release tags on the [cmsis-stm32 releases page](https://github.com/rafaelmartins/cmsis-stm32/releases).
 
-When using `LATEST`, the module downloads the index file from the latest release. For a specific version, the URL includes the tag directly. The downloaded index is cached in your build directory. If you change `VERSION`, the cached index is automatically invalidated and re-downloaded.
+When using `LATEST`, the module downloads the index file from the latest release. For a specific version, the URL includes the tag directly. The downloaded index is cached in the build directory. If `VERSION` changes, the cached index is automatically invalidated and re-downloaded.
 
 
-## Linker Scripts
+## Linker scripts
 
-cmake-cmsis-stm32 does **not** provide linker scripts. You must supply one via the `LINKER_SCRIPT` parameter.
+cmake-cmsis-stm32 does **not** provide linker scripts. Supply one via the `LINKER_SCRIPT` parameter.
 
 The linker script must be compatible with ST's CMSIS startup code. It should define:
 
@@ -100,10 +100,10 @@ The linker script must be compatible with ST's CMSIS startup code. It should def
 - The `_estack` symbol pointing to the end of RAM
 - Standard sections expected by the startup code (`.isr_vector`, `.data`, `.bss`)
 
-The easiest way to obtain a valid linker script is to generate one with STM32CubeMX for your specific device. The startup code in cmsis-stm32 originates from ST's CMSIS Device packages, so CubeMX-generated linker scripts are directly compatible.
+The easiest way to obtain a valid linker script is to generate one with STM32CubeMX for the specific device. The startup code in cmsis-stm32 originates from ST's CMSIS Device packages, so CubeMX-generated linker scripts are directly compatible.
 
 
-## Output Formats
+## Output formats
 
 By default, `cmsis_stm32_target()` produces only an ELF binary. Use `ADDITIONAL_OUTPUTS` to generate other formats:
 
@@ -114,7 +114,7 @@ cmsis_stm32_target(firmware
 )
 ```
 
-| Format | Description | Output File |
+| Format | Description | Output file |
 |--------|-------------|-------------|
 | `BIN` | Raw binary | `<target>.bin` |
 | `IHEX` | Intel HEX | `<target>.hex` |
@@ -125,14 +125,14 @@ cmsis_stm32_target(firmware
 Each format creates a corresponding CMake target (`<target>-bin`, `<target>-ihex`, etc.) that builds by default.
 
 
-### DFU Generation
+### DFU generation
 
-DFU output requires `dfuse-pack.py` from [dfu-util](https://dfu-util.sourceforge.net/). The module searches for `dfuse-pack.py` or `dfuse-pack` in your `PATH`. If not found, it downloads the script automatically -- this requires Python 3.
+DFU output requires `dfuse-pack.py` from [dfu-util](https://dfu-util.sourceforge.net/). The module searches for `dfuse-pack.py` or `dfuse-pack` in the `PATH`. If not found, it downloads the script automatically -- this requires Python 3.
 
 DFU generation internally depends on S19, so requesting `DFU` also generates the S-record file.
 
 
-## Binary Size Reporting
+## Binary size reporting
 
 Enable `SHOW_SIZE` to display firmware size after each build:
 
@@ -157,7 +157,7 @@ cmsis_stm32_target(firmware
 )
 ```
 
-This creates three targets when `st-flash` is available in your `PATH`:
+This creates three targets when `st-flash` is available in the `PATH`:
 
 | Target | Command |
 |--------|---------|
@@ -170,11 +170,11 @@ This creates three targets when `st-flash` is available in your `PATH`:
 Enabling `STLINK` automatically generates Intel HEX output regardless of `ADDITIONAL_OUTPUTS`.
 
 
-### ST-Link Configuration
+### ST-Link configuration
 
 Per-target cache variables control `st-flash` behavior. Set these via `-D` on the CMake command line or in `ccmake`/`cmake-gui`. The variable names use the CMake target name as a prefix.
 
-| Variable | Type | Default | st-flash Flag |
+| Variable | Type | Default | st-flash flag |
 |----------|------|---------|---------------|
 | `<target>_STLINK_RESET` | `BOOL` | `ON` | `--reset` |
 | `<target>_STLINK_CONNECT_UNDER_RESET` | `BOOL` | `OFF` | `--connect-under-reset` |
@@ -192,7 +192,7 @@ cmake --build build --target firmware-stlink-write
 ```
 
 
-## Installation and Packaging
+## Installation and packaging
 
 Enable `INSTALL` to include firmware outputs in CMake's install targets:
 
@@ -213,12 +213,12 @@ cpack --config build/CPackConfig.cmake
 ```
 
 
-## Toolchain Configuration
+## Toolchain configuration
 
 When no toolchain file is specified, the module uses its bundled toolchain for the ARM GNU Toolchain (`arm-none-eabi-gcc`).
 
 
-### Default Configuration
+### Default configuration
 
 The bundled toolchain sets:
 
@@ -230,12 +230,12 @@ The bundled toolchain sets:
 | C++ Compiler | `arm-none-eabi-g++` |
 | Compiler Flags | `-ggdb3 -fdata-sections -ffunction-sections` |
 
-Debug symbols (`-ggdb3`) are always included because they remain in the ELF file and are stripped when generating binary outputs. The `-fdata-sections` and `-ffunction-sections` flags enable dead code elimination (see [Build Optimization](#build-optimization)).
+Debug symbols (`-ggdb3`) are always included because they remain in the ELF file and are stripped when generating binary outputs. The `-fdata-sections` and `-ffunction-sections` flags enable dead code elimination (see [Build optimization](#build-optimization)).
 
 Cross-compilation isolation is configured to search for libraries and headers only in the toolchain's sysroot, not the host system.
 
 
-### Using a Custom Toolchain
+### Using a custom toolchain
 
 To use a different toolchain, set `CMAKE_TOOLCHAIN_FILE` before the `FetchContent` block or via the environment:
 
@@ -250,7 +250,7 @@ CMAKE_TOOLCHAIN_FILE=/path/to/toolchain.cmake cmake -B build
 The module only sets the toolchain if neither `CMAKE_TOOLCHAIN_FILE` nor the `CMAKE_TOOLCHAIN_FILE` environment variable is defined.
 
 
-## Using a Custom CMSIS Index
+## Using a custom CMSIS index
 
 For offline builds or custom CMSIS packages, override the index location with the `CMSIS_STM32_INDEX_<TARGET>` cache variable. The target name is converted to uppercase.
 
@@ -268,7 +268,7 @@ The custom index file must define the same variables as the official index:
 This is useful for air-gapped environments or when testing unreleased CMSIS packages.
 
 
-## Build Optimization
+## Build optimization
 
 For minimal firmware binaries, enable Link-Time Optimization (LTO):
 
